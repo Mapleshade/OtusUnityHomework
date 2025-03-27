@@ -2,19 +2,23 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public sealed class WeaponComponent : MonoBehaviour
-    {
-        public Vector2 Position
-        {
-            get { return this.firePoint.position; }
-        }
+	public sealed class WeaponComponent : MonoBehaviour
+	{
+		[SerializeField]
+		private Transform firePoint;
+		[SerializeField]
+		private BulletConfig _bulletConfig;
 
-        public Quaternion Rotation
-        {
-            get { return this.firePoint.rotation; }
-        }
+		public Vector2 Position
+		{
+			get { return this.firePoint.position; }
+		}
 
-        [SerializeField]
-        private Transform firePoint;
-    }
+		public Quaternion Rotation
+		{
+			get { return this.firePoint.rotation; }
+		}
+
+		public BulletConfig BulletConfig => _bulletConfig;
+	}
 }
