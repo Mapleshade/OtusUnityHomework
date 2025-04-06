@@ -1,38 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
 	public sealed class GameLifeTimeSystem : MonoBehaviour
 	{
-		private GameContext _gameContext;
-
-		public void SetGameContext(GameContext gameContext)
-		{
-			_gameContext = gameContext;
-		}
-
-		private void Start()
-		{
-			foreach (var initializable in _gameContext.Initializables)
-				initializable.Initialize();
-		}
+		[Inject]
+		public List<IFixedUpdate> FixedUpdates { get; } = new();
+		[Inject]
+		public List<IUpdate> Updates { get; } = new();
 
 		private void Update()
 		{
-			foreach (var update in _gameContext.Updates)
+			foreach (var update in Updates)
 				update.CustomUpdate();
 		}
 
 		private void FixedUpdate()
 		{
-			foreach (var fixedUpdate in _gameContext.FixedUpdates)
+			foreach (var fixedUpdate in FixedUpdates)
 				fixedUpdate.CustomFixedUpdate();
-		}
-
-		private void OnApplicationQuit()
-		{
-			foreach (var disposable in _gameContext.Disposables)
-				disposable.Dispose();
 		}
 	}
 }

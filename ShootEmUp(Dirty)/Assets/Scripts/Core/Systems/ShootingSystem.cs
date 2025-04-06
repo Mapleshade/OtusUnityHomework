@@ -4,20 +4,20 @@ namespace ShootEmUp
 {
 	public class ShootingSystem : IFixedUpdate
 	{
-		private readonly GameContext _gameContext;
+		private readonly CharacterEntity _characterEntity;
 		private readonly GameSettings _gameSettings;
 		private readonly BulletsModel _bulletsModel;
 		private readonly EnemiesModel _enemiesModel;
 
-		public ShootingSystem(GameContext gameContext,
-			BulletsModel bulletsModel,
+		public ShootingSystem(BulletsModel bulletsModel,
 			EnemiesModel enemiesModel,
-			GameSettings gameSettings)
+			GameSettings gameSettings,
+			CharacterEntity characterEntity)
 		{
-			_gameContext = gameContext;
 			_bulletsModel = bulletsModel;
 			_enemiesModel = enemiesModel;
 			_gameSettings = gameSettings;
+			_characterEntity = characterEntity;
 		}
 
 		public void CustomFixedUpdate()
@@ -29,19 +29,16 @@ namespace ShootEmUp
 
 		private void CheckFiredPlayers()
 		{
-			foreach (var characterEntity in _gameContext.CharacterEntities)
-			{
-				if (!characterEntity.FireComponent.FireRequired)
-					continue;
+			if (!_characterEntity.FireComponent.FireRequired)
+					return;
 
-				if (!characterEntity.TeamComponent.IsPlayer)
-					continue;
+			if (!_characterEntity.TeamComponent.IsPlayer)
+				return;
 
-				var weapon = characterEntity.WeaponComponent;
-				var direction = weapon.Rotation * Vector3.up * weapon.BulletConfig.Speed;
-				Fire(weapon.Position, direction, characterEntity.TeamComponent.IsPlayer, weapon.BulletConfig);
-				characterEntity.FireComponent.FireRequired = false;
-			}
+			var weapon = _characterEntity.WeaponComponent;
+			var direction = weapon.Rotation * Vector3.up * weapon.BulletConfig.Speed;
+			Fire(weapon.Position, direction, _characterEntity.TeamComponent.IsPlayer, weapon.BulletConfig);
+			_characterEntity.FireComponent.FireRequired = false;
 		}
 
 		private void CheckFiredEnemies()

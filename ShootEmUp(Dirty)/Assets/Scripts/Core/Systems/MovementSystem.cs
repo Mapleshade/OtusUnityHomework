@@ -4,29 +4,26 @@ namespace ShootEmUp
 {
     public class MovementSystem : IFixedUpdate
     {
-        private readonly GameContext _gameContext;
+        private readonly CharacterEntity _characterEntity;
         private readonly GameSettings _gameSettings;
         private readonly EnemiesModel _enemiesModel;
 
-        public MovementSystem(GameContext gameContext,
-            EnemiesModel enemiesModel,
-            GameSettings gameSettings)
+        public MovementSystem(EnemiesModel enemiesModel,
+            GameSettings gameSettings,
+            CharacterEntity characterEntity)
         {
-            _gameContext = gameContext;
             _enemiesModel = enemiesModel;
             _gameSettings = gameSettings;
+            _characterEntity = characterEntity;
         }
 
         public void CustomFixedUpdate()
         {
-            foreach (var characterEntity in _gameContext.CharacterEntities)
-            {
-                if (!characterEntity.TeamComponent.IsPlayer)
-                    continue;
+            if (!_characterEntity.TeamComponent.IsPlayer)
+                    return;
 
-                var velocity = new Vector2(characterEntity.InputComponent.HorizontalDirection, 0);
-                characterEntity.RigidbodyComponent.Rigidbody2D.MoveByRigidbodyVelocity(velocity * Time.fixedDeltaTime, _gameSettings.PlayerSpeed);
-            }
+            var velocity = new Vector2(_characterEntity.InputComponent.HorizontalDirection, 0);
+            _characterEntity.RigidbodyComponent.Rigidbody2D.MoveByRigidbodyVelocity(velocity * Time.fixedDeltaTime, _gameSettings.PlayerSpeed);
 
             foreach (var activeEnemy in _enemiesModel.ActiveEnemies)
             {
