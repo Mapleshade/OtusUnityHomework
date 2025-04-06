@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
@@ -8,18 +9,18 @@ namespace ShootEmUp
 		private readonly GameSettings _gameSettings;
 		private readonly Transform _poolTransform;
 		private readonly Transform _worldTransform;
-		private readonly GameContext _gameContext;
+		private readonly CharacterEntity _characterEntity;
 		private readonly Queue<GameObject> enemyPool = new();
 
 		public EnemyPoolModel(GameSettings gameSettings,
 			Transform poolTransform,
 			Transform worldTransform,
-			GameContext gameContext)
+			CharacterEntity characterEntity)
 		{
 			_gameSettings = gameSettings;
 			_poolTransform = poolTransform;
 			_worldTransform = worldTransform;
-			_gameContext = gameContext;
+			_characterEntity = characterEntity;
 		}
 
 		public void Initialize()
@@ -35,7 +36,7 @@ namespace ShootEmUp
 		{
 			if (!enemyPool.TryDequeue(out var enemy))
 				return null;
-			var myPlayer = _gameContext.CharacterEntities.GetMyPlayer();
+
 			enemy.transform.SetParent(_worldTransform);
 
 			var spawnPosition = _gameSettings.SpawnPositions.RandomPosition();
@@ -43,7 +44,7 @@ namespace ShootEmUp
 
 			var attackPosition = _gameSettings.AttackPositions.RandomPosition();
 			enemy.GetComponent<EnemyMoveComponent>().SetDestination(attackPosition);
-			enemy.GetComponent<EnemyAttackComponent>().SetTarget(myPlayer.gameObject);
+			enemy.GetComponent<EnemyAttackComponent>().SetTarget(_characterEntity.gameObject);
 			return enemy.GetComponent<EnemyCharacterEntity>();
 		}
 

@@ -4,33 +4,31 @@ namespace ShootEmUp
 {
 	public sealed class InputSystem : IUpdate
 	{
-		private readonly GameContext _gameContext;
+		private readonly CharacterEntity _characterEntity;
 
-		public InputSystem(GameContext gameContext)
+		public InputSystem(CharacterEntity characterEntity)
 		{
-			_gameContext = gameContext;
+			_characterEntity = characterEntity;
 		}
 
 		public void CustomUpdate()
 		{
-			var myPlayer = _gameContext.CharacterEntities.GetMyPlayer();
-
 			if (Input.GetKeyDown(KeyCode.Space))
-				myPlayer.FireComponent.FireRequired = true;
+				_characterEntity.FireComponent.FireRequired = true;
 
 			if (Input.GetKey(KeyCode.LeftArrow))
 			{
-				myPlayer.InputComponent.HorizontalDirection = -1;
+				_characterEntity.InputComponent.HorizontalDirection = -1;
 				return;
 			}
 
 			if (Input.GetKey(KeyCode.RightArrow))
 			{
-				myPlayer.InputComponent.HorizontalDirection = 1;
+				_characterEntity.InputComponent.HorizontalDirection = 1;
 				return;
 			}
 
-			myPlayer.InputComponent.HorizontalDirection = 0;
+			_characterEntity.InputComponent.HorizontalDirection = 0;
 		}
 	}
 }

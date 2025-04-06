@@ -4,16 +4,15 @@ namespace ShootEmUp
 {
 	public class GameFinishSystem : IUpdate
 	{
-		private readonly GameContext _gameContext;
+		private readonly CharacterEntity _characterEntity;
 
-		public GameFinishSystem(GameContext gameContext)
+		public GameFinishSystem(CharacterEntity characterEntity)
 		{
-			_gameContext = gameContext;
+			_characterEntity = characterEntity;
 		}
 		public void CustomUpdate()
 		{
-			var myPlayer = _gameContext.CharacterEntities.GetMyPlayer();
-			if (!myPlayer.HitPointsComponent.IsHitPointsExists())
+			if (!_characterEntity.HitPointsComponent.IsHitPointsExists())
 				FinishGame();
 		}
 
